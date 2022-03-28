@@ -51,14 +51,16 @@ print("           |X||-------~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("           |X|~")
 print("           |X|~")
 print("Start Game by typing ? for options")
+
 while True:
     command = input(">").split()
     if len(command) == 0:
         continue
     if len(command) > 0:
         verb = command[0].lower()
+    # The problem is when you have item of multiple words e.g. iron dagger; you need to join them
     if len(command) > 1:
-        item = command[1].lower()
+        item = ' '.join(x.lower() for x in command[1:])
     if verb == "?":
         for key in commands:
             print(key + " : " + commands[key])
@@ -89,12 +91,17 @@ while True:
             if craftpossible == True:
                 for i in craft[item]:
                     items[i] -= craft[item][i]
-                items[item] += 1
+                # Check if the item exists and update it
+                if item in items:
+                    items[item] += 1
+                else: # or create it if it does not exist
+                    items[item] = 1
                 print("item crafted\n")
 
-            if items["iron dagger"] >= 1 and items["gold chain"] >= 1:
-                print("o==[]::::::::::::::::>  You are a Hero! <::::::::::::::::[]==o")
-                break
+            if "iron dagger" in items and "gold chain" in items: # check the items exists
+                if items["iron dagger"] >=1 and items["gold chain"] >=1: # check their value
+                    print("o==[]::::::::::::::::>  You are a Hero! <::::::::::::::::[]==o")
+                    break
         else:
             print("keep crafting")
     else:
